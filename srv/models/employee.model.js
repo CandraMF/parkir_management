@@ -1,5 +1,5 @@
 'use strict';
-var dbConn = require('../config/db.config');
+var dbConn = require('../config/database.config');
 
 var Employee = function(employee){
     this.first_name     = employee.first_name;
