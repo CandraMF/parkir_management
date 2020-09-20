@@ -2,88 +2,154 @@
 const model = require('../models/index');
 
 exports.findAll = async function(req, res) {
-    const user = await model.user.findAll({});
-    if (user.length !== 0) {
-        res.json({
-            'success': 1,
-            'messages': '',
-            'data': user
-        })
-    } else {
-        res.json({
-            success: 0,
-            'messages': 'EMPTY',
-            'data': {}
-        })
-    }
-};
-
-exports.create = function(req, res) {
-    const {
-        name,
-        email,
-        gender,
-        phoneNumber
-    } = req.body;
-
-    const user = await model.user.create({
-        name,
-        email,
-        gender,
-        phone_number: phoneNumber
-    });
-
-    if (user) {
-        res.status(201).json({
-            'success' : 1,
-            'messages': 'User berhasil ditambahkan',
-            'data': user,
-        })
-    }
-};
-
-exports.findById = function(req, res) {
-    User.findById(req.id, function(err, user) {
-        if (err)
-            res.send(err);
-        res.json(user);
-    });
-};
-
-exports.update = function(req, res) {
-    const userId = req.id;
-    const {
-        name,
-        email,
-        gender,
-        phoneNumber
-    } = req.body;
     
-    const user = await model.user.update({
-        name,
-        email,
-        gender,
-        phone_number: phoneNumber
-    }, {
-        where: {
-            id: userId
+    try {        
+        const user = await model.user.findAll({});
+        if (user.length !== 0) {
+            res.json({
+                'success': 1,
+                'messages': '',
+                'data': user
+            })
+        } else {
+            res.json({
+                'success': 0,
+                'messages': 'EMPTY',
+                'data': {}
+            })
         }
-    });
+
+    } catch (err) {
+        res.status(400).json({
+            'success': 0,
+            'messages': err.message,
+            'data': {},
+        })     
+    }    
+};
+
+exports.create = async function(req, res) {
+    try {        
+        const {
+            name,
+            email,
+            gender,
+            phoneNumber
+        } = req.body;
     
-    if (user) {
-        res.json({
-            'status': 'OK',
-            'messages': 'User berhasil diupdate',
-            'data': user,
+        const user = await model.user.create({
+            name,
+            email,
+            gender,
+            phone_number: phoneNumber
+        });
+    
+        if (user) {
+            res.status(201).json({
+                'success' : 1,
+                'messages': 'User berhasil ditambahkan',
+                'data': user,
+            })
+        }
+    } catch (err) {
+        res.status(400).json({
+            'success': 0,
+            'messages': err.message,
+            'data': {},
         })
+      
     }
+    
+};
+
+exports.findById = async function(req, res) {
+    try {
+        const user = await model.user.findOne({
+            where: {
+                id: req.params.id
+            }
+        });
+            
+        if (user) {
+            res.json({
+                'success': 1,
+                'messages': 'User ditemukan',
+                'data': user,
+            })
+        }         
+
+    } catch (err) {
+        res.status(400).json({
+            'success': 0,
+            'messages': err.message,
+            'data': {},
+        })
+      
+    }
+};
+
+exports.update = async function(req, res) {
+    try {        
+        const userId = req.id;
+        
+        const {
+            name,
+            email,
+            gender,
+            phoneNumber
+        } = req.body;
+        
+        const user = await model.user.update({
+            name,
+            email,
+            gender,
+            phone_number: phoneNumber
+        }, {
+            where: {
+                id: userId
+            }
+        });
+        
+        if (user) {
+            res.json({
+                'success': 1,
+                'messages': 'User berhasil diupdate',
+                'data': user,
+            })
+        }
+    } catch (err) {
+        res.status(400).json({
+            'success': 0,
+            'messages': err.message,
+            'data': {},
+        })
+      
+    }
+    
 
 };
 
-exports.delete = function(req, res) {
-    User.delete( req.id, function(err, user) {
-        if (err)
-            res.send(err);
-        res.json({ error:false, message: 'User successfully deleted' });
-    });
+exports.delete = async function(req, res) {
+    try {
+        const usersId = req.params.id;
+        
+        const users = await model.Todo.destroy({ where: {
+            id: usersId
+        }})
+
+        if (users) {
+            res.json({
+                'success': 1,
+                'messages': 'User berhasil dihapus',
+                'data': users,
+            })
+        }
+    } catch (err) {
+        res.status(400).json({
+            'success': 0,
+            'messages': err.message,
+            'data': {},
+        })
+      
+    }
 };
