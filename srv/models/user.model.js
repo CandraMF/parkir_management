@@ -11,9 +11,10 @@ module.exports = (sequelize, DataTypes) => {
   };
   user.init({
     name: DataTypes.STRING,
+    password: DataTypes.STRING,
     email: DataTypes.STRING,
     phone_number: DataTypes.STRING,
-    gender: DataTypes.BOOLEAN
+    gender: DataTypes.BOOLEAN    
   }, {
     sequelize,
     modelName: 'user',

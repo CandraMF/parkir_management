@@ -7,8 +7,8 @@ const app = express();
 // const employeeRoutes = require('./routes/employee.routes')
 const userRoutes = require('./routes/user.routes')
 
-app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 export default (app, http) => {
     
